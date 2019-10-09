@@ -2,9 +2,13 @@
 
 namespace Yassir3wad\Settings\Resources;
 
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use Laravel\Nova\Fields\Field;
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Http\Requests\ResourceIndexRequest;
 use Laravel\Nova\Resource;
 
 class Setting extends Resource
@@ -31,7 +35,7 @@ class Setting extends Resource
      * @var array
      */
     public static $search = [
-        'id', 'value'
+        'id', 'name', 'value'
     ];
 
     /**
@@ -43,10 +47,51 @@ class Setting extends Resource
     public function fields(Request $request)
     {
         return [
-            ID::make()->sortable(),
+            ID::make()->sortable()->hideFromIndex()->hideFromDetail(),
 
-            Text::make("Name")->rules('required')->sortable(),
+            Text::make("Name")
+                ->readonly()
+                ->resolveUsing(function ($value) {
+                    return Str::studly($value);
+                }),
 
+            $this->getField($request)->showOnIndex()
         ];
+    }
+
+    /**
+     * @return Field
+     */
+    private function getField($request)
+    {
+        if ($this->model()->id) {
+            $field = ($this->resource->field)::make("Value");
+        } else {
+            $field = (\Yassir3wad\Settings\Models\Setting::find(\request('resourceId'))->field)::make("Value");
+        }
+
+        if ($field instanceof \Laravel\Nova\Fields\File && $request instanceof ResourceIndexRequest) {
+            return \Inspheric\Fields\Url::make('Value')->label('Preview')
+                ->alwaysClickable()
+                ->resolveUsing(function ($value) {
+                    if ($value) {
+                        return Storage::url($value);
+                    } else {
+                        return null;
+                    }
+                });
+        }
+
+        return $field;
+    }
+
+    public static function authorizedToCreate(Request $request)
+    {
+        return false;
+    }
+
+    public function authorizedToDelete(Request $request)
+    {
+        return false;
     }
 }
