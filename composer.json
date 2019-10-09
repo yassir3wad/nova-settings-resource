@@ -1,0 +1,31 @@
+{
+  "name": "yassir3wad/nova-settings-resource",
+  "description": "A Laravel Nova tool.",
+  "keywords": [
+    "laravel",
+    "nova",
+    "settings"
+  ],
+  "license": "MIT",
+  "require": {
+    "php": ">=7.1.0",
+    "laravel/nova": "^2.1"
+  },
+  "autoload": {
+    "psr-4": {
+      "Yassir3wad\\Settings\\": "src/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Yassir3wad\\Settings\\ToolServiceProvider"
+      ]
+    }
+  },
+  "config": {
+    "sort-packages": true
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
+}
