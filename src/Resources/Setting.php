@@ -4,6 +4,7 @@ namespace Yassir3wad\Settings\Resources;
 
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\Field;
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
@@ -55,7 +56,9 @@ class Setting extends Resource
                     return Str::studly($value);
                 }),
 
-            $this->getField($request)->showOnIndex()
+            $this->getField($request)->showOnIndex(),
+
+            DateTime::make('Last Update', 'updated_at')->exceptOnForms()
         ];
     }
 
