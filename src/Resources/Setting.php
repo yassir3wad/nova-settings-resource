@@ -53,7 +53,7 @@ class Setting extends Resource
             Text::make("Name")
                 ->readonly()
                 ->resolveUsing(function ($value) {
-                    return Str::studly($value);
+                    return Str::ucfirst(str_replace('_', ' ',$value));
                 }),
 
             $this->getField($request)->showOnIndex(),
