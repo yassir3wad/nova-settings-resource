@@ -29,7 +29,7 @@ class Setting extends Model
                 return (boolean)$this->attributes['value'];
                 break;
             case 'MrMonat\Translatable\Translatable':
-                return json_decode($this->attributes['value'], true);
+                return is_array($this->attributes['value']) ? $this->attributes['value'] : json_decode($this->attributes['value'], true);
                 break;
             case 'Laravel\Nova\Fields\Date':
                 return Carbon::parse($this->attributes['value']);
