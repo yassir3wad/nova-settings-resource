@@ -65,7 +65,7 @@ class Setting extends Resource
     /**
      * @return Field
      */
-    private function getField($request)
+    protected function getField($request)
     {
         if ($this->model()->id) {
             $field = ($this->resource->field)::make("Value");
